@@ -4,15 +4,12 @@
 name: Build and Deploy on Release
 
 on:
-  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        platform: [macos-latest,windows-latest]
-    runs-on: ${{ matrix.platform }}
-    
+  build-mac:
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v3
     
@@ -35,4 +32,38 @@ jobs:
       run: yarn package
 
     - name: Attach Build Artifacts to Release
-      run: ls
+      uses: svenstaro/upload-release-action@2.7.0
+      with:
+        file: out/*.dmg
+        overwrite: true
+        file_glob: true
+        
+  build-windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'yarn'
+    - name: Install Dependencies
+      run: yarn
+
+    - name: Bump Version
+      run: |
+        echo ${{ github.ref_name }}
+        npm pkg set version=${{ github.ref_name }}
+    
+    - name: Package App
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: yarn package
+
+    - name: Attach Build Artifacts to Release
+      uses: svenstaro/upload-release-action@2.7.0
+      with:
+        file: out/*.exe
+        overwrite: true
+        file_glob: true
