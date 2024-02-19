@@ -30,7 +30,7 @@ const createWindow = () => {
         {
             label: 'Settings',
             click: () => {
-                
+
             },
         }
     ]);
@@ -42,6 +42,7 @@ const createWindow = () => {
         const pt = screen.getCursorScreenPoint();
         const [w, h] = win.getSize();
         win.setPosition(pt.x - w / 2, pt.y - h / 2, true);
+        win.show();
     }, interval);
 }
 
