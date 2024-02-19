@@ -37,11 +37,15 @@ const createWindow = () => {
         tracker = setInterval(() => {
             const pt = screen.getCursorScreenPoint();
             const [w, h] = win.getSize();
-            win.setPosition(pt.x - w / 2, pt.y - h / 2, true);
+            if (process.platform == 'darwin') {
+                win.setPosition(pt.x - w / 2, pt.y - h / 2, true);
+            } else {
+                win.setPosition(pt.x - w / 2, pt.y - h / 2);
+            }
             win.show();
         }, currentInterval);
     }
-    setTracker(store.get('interval'));
+    setTracker(currentInterval);
 
     const tray = new Tray(app.isPackaged ? path.join(process.resourcesPath, '../assets/trayicon.png') : path.join(__dirname, '../assets/trayicon.png'));
     function periodMenuItem(i: number, label: string, interval: number): MenuItemConstructorOptions {
