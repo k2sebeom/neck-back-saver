@@ -22,6 +22,8 @@ jobs:
       run: yarn
     
     - name: Package App
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: yarn package
 
     - name: Attach Build Artifacts to Release
