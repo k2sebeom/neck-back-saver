@@ -16,7 +16,7 @@ const store = new Store({ schema });
 const ONEMINUTE: number = 60000;
 
 let tracker: NodeJS.Timeout | null = null;
-let currentInterval: number = store.get('interval');
+let currentInterval: number = store.get('interval', ONEMINUTE * 5);
 
 const createWindow = () => {
     const win = new BrowserWindow({
