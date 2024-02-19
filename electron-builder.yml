@@ -4,8 +4,9 @@ extends: null
 
 buildVersion: "0.1.0"
 
-extraFiles:
-  - assets/trayicon.png
+extraResources:
+  - from: assets/trayicon.png
+    to: assets/trayicon.png
 
 directories:
   output: out

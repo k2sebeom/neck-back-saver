@@ -47,7 +47,7 @@ const createWindow = () => {
     }
     setTracker(currentInterval);
 
-    const tray = new Tray(app.isPackaged ? path.join(process.resourcesPath, '../assets/trayicon.png') : path.join(__dirname, '../assets/trayicon.png'));
+    const tray = new Tray(app.isPackaged ? path.join(process.resourcesPath, 'assets', 'trayicon.png') : path.join(__dirname, '../assets/trayicon.png'));
     function periodMenuItem(i: number, label: string, interval: number): MenuItemConstructorOptions {
         return {
             label,
