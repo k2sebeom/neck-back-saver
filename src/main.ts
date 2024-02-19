@@ -25,6 +25,7 @@ const createWindow = () => {
         resizable: true,
         frame: false,
         backgroundColor: '#00FFFFFF',
+        skipTaskbar: true,
         transparent: true,
     });
 
