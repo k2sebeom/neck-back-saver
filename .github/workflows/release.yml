@@ -23,6 +23,11 @@ jobs:
         cache: 'yarn'
     - name: Install Dependencies
       run: yarn
+
+    - name: Bump Version
+      run: |
+        echo ${{ github.ref_name }}
+        npm pkg set version=${{ github.ref_name }}
     
     - name: Package App
       env:
