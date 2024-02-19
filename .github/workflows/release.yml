@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-mac:
     runs-on: macos-latest
     
     steps:
@@ -18,5 +18,30 @@ jobs:
       with:
         node-version: 18.x
         cache: 'yarn'
-    - run: yarn
-    - run: yarn package
+    - name: Install Dependencies
+      run: yarn
+    
+    - name: Package App
+      run: yarn package
+
+    - name: Attach Build Artifacts to Release
+      run: ls
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18.x
+        cache: 'yarn'
+    - name: Install Dependencies
+      run: yarn
+    
+    - name: Package App
+      run: yarn package
+
+    - name: Attach Build Artifacts to Release
+      run: ls
