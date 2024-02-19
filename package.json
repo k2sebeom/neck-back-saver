@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "start": "electron .",
-    "package": "electron-builder build",
+    "package": "electron-builder build --publish never",
     "prepackage": "tsc"
   },
   "devDependencies": {
