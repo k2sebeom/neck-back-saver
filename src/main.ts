@@ -38,11 +38,8 @@ const createWindow = () => {
         tracker = setInterval(() => {
             const pt = screen.getCursorScreenPoint();
             const [w, h] = win.getSize();
-            if (process.platform == 'darwin') {
-                win.setPosition(pt.x - w / 2, pt.y - h / 2, true);
-            } else {
-                win.setPosition(pt.x - w / 2, pt.y - h / 2);
-            }
+            const center = [Math.round(pt.x - w / 2), Math.round(pt.y - h / 2)];
+            win.setPosition(center[0], center[1], true);
             win.show();
         }, currentInterval);
     }
