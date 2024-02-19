@@ -1,6 +1,6 @@
 {
   "name": "neck-back-saver",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "dist/main.js",
   "repository": "https://github.com/k2sebeom/neck-back-saver.git",
   "author": "k2sebeom <moses97@gmail.com>",
