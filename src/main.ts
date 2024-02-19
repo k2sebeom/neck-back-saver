@@ -73,6 +73,9 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     createWindow();
+    app.setLoginItemSettings({
+        openAtLogin: true,
+    })
 })
 
 app.on('window-all-closed', () => {
