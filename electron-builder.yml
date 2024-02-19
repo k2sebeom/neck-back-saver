@@ -13,7 +13,7 @@ directories:
 mac:
   identity: null
   target:
-    - dir
+    - dmg
   icon: assets/icon.icns
 
 win:
