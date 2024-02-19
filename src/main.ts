@@ -43,7 +43,7 @@ const createWindow = () => {
     }
     setTracker(store.get('interval'));
 
-    const tray = new Tray(path.join(__dirname, '../assets/trayicon.png'));
+    const tray = new Tray(app.isPackaged ? path.join(process.resourcesPath, '../assets/trayicon.png') : path.join(__dirname, '../assets/trayicon.png'));
     function periodMenuItem(i: number, label: string, interval: number): MenuItemConstructorOptions {
         return {
             label,
@@ -66,6 +66,7 @@ const createWindow = () => {
         { label: '도움', type: 'normal', click: (menuItem, window, event) => {
           shell.openExternal('https://www.nhis.or.kr/magazin/mobile/201604/c07.html');
         }},
+        { label: '닫기', role: 'quit', type: 'normal' },
       ])
     tray.setContextMenu(contextMenu);
 }

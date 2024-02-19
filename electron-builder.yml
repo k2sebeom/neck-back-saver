@@ -1,0 +1,22 @@
+appId: "com.moses97.NeckBackSaver"
+productName: "목허리세이버"
+extends: null
+
+buildVersion: "0.1.0"
+
+extraFiles:
+  - assets/trayicon.png
+
+directories:
+  output: out
+
+mac:
+  target:
+    - dir
+  icon: assets/icon.icns
+
+win:
+  target:
+    - portable
+    - nsis
+  icon: assets/icon.ico
