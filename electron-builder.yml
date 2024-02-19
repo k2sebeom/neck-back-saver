@@ -11,6 +11,7 @@ directories:
   output: out
 
 mac:
+  identity: null
   target:
     - dir
   icon: assets/icon.icns
