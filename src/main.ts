@@ -41,6 +41,7 @@ const createWindow = () => {
             const center = [Math.round(pt.x - w / 2), Math.round(pt.y - h / 2)];
             win.setPosition(center[0], center[1], true);
             win.show();
+            win.focus();
         }, currentInterval);
     }
     setTracker(currentInterval);
