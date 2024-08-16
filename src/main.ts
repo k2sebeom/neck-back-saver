@@ -33,25 +33,21 @@ const createWindow = () => {
     win.loadFile('public/index.html');
 
     function goCrazy(count: number = 0) {
-        const allDisplays = screen.getAllDisplays();
+        const RADIUS = 500;
+        const pt = screen.getCursorScreenPoint();
+        const center = [pt.x - win.getSize()[0] / 2, pt.y - win.getSize()[1] / 2]
 
-        const display = allDisplays[Math.floor(Math.random() * allDisplays.length)]
-        const { width, height } = display.workAreaSize;
+        const angle = Math.random() * Math.PI;
+        const r = count < BLINK_MAX ? Math.random() * RADIUS : 0;
 
-        const w = Math.floor(Math.random() * width);
-        const h = Math.floor(Math.random() * height);
-        win.setPosition(w, h, false);
+        const x = Math.floor(center[0] + r * Math.cos(angle));
+        const y = Math.floor(center[1] + r * Math.sin(angle));
+        win.setPosition(x, y, false);
         win.show();
         win.focus();
         
         if(count < BLINK_MAX) {
-            setTimeout(() => goCrazy(count + 1), 300);
-        } else {
-            const pt = screen.getCursorScreenPoint();
-            const center = [pt.x - win.getSize()[0] / 2, pt.y - win.getSize()[1] / 2]
-            win.setPosition(Math.floor(center[0]), Math.floor(center[1]), false);
-            win.show();
-            win.focus();
+            setTimeout(() => goCrazy(count + 1), 100);
         }
     }
 
