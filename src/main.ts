@@ -14,6 +14,7 @@ const schema: Schema<Config> = {
 const store = new Store({ schema });
 
 const ONEMINUTE: number = 60000;
+const BLINK_MAX: number = 30;
 
 let tracker: NodeJS.Timeout | null = null;
 let currentInterval: number = store.get('interval', ONEMINUTE * 5);
@@ -31,18 +32,34 @@ const createWindow = () => {
 
     win.loadFile('public/index.html');
 
+    function goCrazy(count: number = 0) {
+        const allDisplays = screen.getAllDisplays();
+
+        const display = allDisplays[Math.floor(Math.random() * allDisplays.length)]
+        const { width, height } = display.workAreaSize;
+
+        const w = Math.floor(Math.random() * width);
+        const h = Math.floor(Math.random() * height);
+        win.setPosition(w, h, false);
+        win.show();
+        win.focus();
+        
+        if(count < BLINK_MAX) {
+            setTimeout(() => goCrazy(count + 1), 300);
+        } else {
+            const pt = screen.getCursorScreenPoint();
+            const center = [pt.x - win.getSize()[0] / 2, pt.y - win.getSize()[1] / 2]
+            win.setPosition(Math.floor(center[0]), Math.floor(center[1]), false);
+            win.show();
+            win.focus();
+        }
+    }
+
     function setTracker(interval: number) {
         store.set('interval', interval);
         currentInterval = interval;
         if(tracker) clearInterval(tracker);
-        tracker = setInterval(() => {
-            const pt = screen.getCursorScreenPoint();
-            const [w, h] = win.getSize();
-            const center = [Math.round(pt.x - w / 2), Math.round(pt.y - h / 2)];
-            win.setPosition(center[0], center[1], true);
-            win.show();
-            win.focus();
-        }, currentInterval);
+        tracker = setInterval(goCrazy, currentInterval);
     }
     setTracker(currentInterval);
 
@@ -64,12 +81,12 @@ const createWindow = () => {
             periodMenuItem(1, '5분', ONEMINUTE * 5),
             periodMenuItem(2, '10분', ONEMINUTE * 10),
             periodMenuItem(3, '30분', ONEMINUTE * 30),
+            periodMenuItem(3, '45분', ONEMINUTE * 45),
             periodMenuItem(4, '1시간', ONEMINUTE * 60),
         ]},
-        { label: '도움', type: 'normal', click: (menuItem, window, event) => {
-          shell.openExternal('https://www.nhis.or.kr/magazin/mobile/201604/c07.html');
+        { label: '발사', type: 'normal', click: (menuItem, window, event) => {
+            goCrazy();
         }},
-        { label: '닫기', role: 'quit', type: 'normal' },
       ])
     tray.setContextMenu(contextMenu);
 }
