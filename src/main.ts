@@ -72,7 +72,7 @@ function getImageUrl(image: string): string {
 let popupWin: BrowserWindow;
 
 function loadImage() {
-    popupWin.loadFile('public/index.html', {
+    popupWin.loadFile(path.join(app.getAppPath(), 'public/index.html'), {
         query: {
             image: getImageUrl(currentImage),
             ack: s.acknowledge,
@@ -180,7 +180,7 @@ function openPicker() {
         },
     });
 
-    pickerWin.loadFile('public/picker.html');
+    pickerWin.loadFile(path.join(app.getAppPath(), 'public/picker.html'));
 
     pickerWin.webContents.on('did-finish-load', () => {
         sendPickerUpdate();
