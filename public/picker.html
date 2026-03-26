@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>이미지 선택</title>
+  <title></title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -119,13 +119,17 @@
   </style>
 </head>
 <body>
-  <h2>기본 이미지</h2>
+  <h2 id="samples-title"></h2>
   <div class="grid" id="samples"></div>
-  <h2>내 이미지</h2>
+  <h2 id="custom-title"></h2>
   <div class="grid" id="custom"></div>
 
   <script>
     function render(data) {
+      const str = data.strings;
+      document.getElementById('samples-title').textContent = str.builtInImages;
+      document.getElementById('custom-title').textContent = str.myImages;
+
       const samplesGrid = document.getElementById('samples');
       const customGrid = document.getElementById('custom');
 
@@ -138,7 +142,7 @@
         card.className = 'card' + (img.key === data.selected ? ' selected' : '');
         card.innerHTML = `
           <img src="${img.url}" />
-          <div class="label" title="${!isSample ? '더블클릭하여 이름 변경' : ''}">${img.label}</div>
+          <div class="label" title="${!isSample ? str.dblClickToRename : ''}">${img.label}</div>
           ${!isSample ? '<button class="remove-btn">&times;</button>' : ''}
         `;
         card.addEventListener('click', (e) => {
@@ -179,7 +183,7 @@
       // Add button always at the end of custom grid
       const addBtn = document.createElement('div');
       addBtn.className = 'add-btn';
-      addBtn.innerHTML = '<div class="icon">+</div><div class="text">이미지 추가</div>';
+      addBtn.innerHTML = `<div class="icon">+</div><div class="text">${str.addImage}</div>`;
       addBtn.addEventListener('click', () => window.pickerAPI.addCustomImage());
       customGrid.appendChild(addBtn);
     }

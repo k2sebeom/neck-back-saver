@@ -75,6 +75,10 @@
       if (image) {
         document.getElementById('poster').src = image;
       }
+      const ackText = params.get('ack');
+      if (ackText) {
+        document.getElementById('ack').textContent = ackText;
+      }
 
       document.getElementById('ack').addEventListener('click', () => {
         window.popupAPI.acknowledge();

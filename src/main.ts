@@ -2,6 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain, Menu, MenuItemConstructorOptions, 
 import Store, { Schema } from 'electron-store';
 import path from 'path';
 import url from 'url';
+import { getLocale, t } from './i18n';
 
 interface CustomImage {
     path: string;
@@ -37,6 +38,9 @@ const schema: Schema<Config> = {
 };
 const store = new Store({ schema });
 
+const locale = getLocale();
+const s = t(locale);
+
 const ONEMINUTE: number = 60000;
 const BLINK_COUNT: number = 3;
 const BLINK_ON_MS: number = 100;
@@ -69,7 +73,10 @@ let popupWin: BrowserWindow;
 
 function loadImage() {
     popupWin.loadFile('public/index.html', {
-        query: { image: getImageUrl(currentImage) },
+        query: {
+            image: getImageUrl(currentImage),
+            ack: s.acknowledge,
+        },
     });
 }
 
@@ -124,7 +131,7 @@ function getAllImages(): { key: string; url: string; label: string }[] {
         images.push({
             key: `sample:${s}`,
             url: getImageUrl(`sample:${s}`),
-            label: `포스터 ${i + 1}`,
+            label: `${locale === 'ko' ? '포스터' : 'Poster'} ${i + 1}`,
         });
     });
     customImages.forEach((ci) => {
@@ -137,11 +144,21 @@ function getAllImages(): { key: string; url: string; label: string }[] {
     return images;
 }
 
+function getPickerStrings() {
+    return {
+        builtInImages: s.builtInImages,
+        myImages: s.myImages,
+        addImage: s.addImage,
+        dblClickToRename: s.dblClickToRename,
+    };
+}
+
 function sendPickerUpdate() {
     if (pickerWin && !pickerWin.isDestroyed()) {
         pickerWin.webContents.send('images-updated', {
             images: getAllImages(),
             selected: currentImage,
+            strings: getPickerStrings(),
         });
     }
 }
@@ -156,7 +173,7 @@ function openPicker() {
         width: 520,
         height: 500,
         resizable: true,
-        title: '이미지 선택',
+        title: s.selectImage,
         webPreferences: {
             contextIsolation: true,
             preload: path.join(__dirname, 'preload.js'),
@@ -182,7 +199,7 @@ ipcMain.on('select-image', (_event, imageKey: string) => {
 
 ipcMain.on('add-custom-image', async () => {
     const result = await dialog.showOpenDialog({
-        title: '이미지 선택',
+        title: s.selectImage,
         filters: [{ name: 'Images', extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'] }],
         properties: ['openFile'],
     });
@@ -224,7 +241,7 @@ ipcMain.on('rename-custom-image', (_event, imageKey: string, newName: string) =>
     }
 });
 
-// --- Menu bar ---
+// --- Tray menu ---
 
 function periodMenuItem(label: string, interval: number): MenuItemConstructorOptions {
     return {
@@ -242,16 +259,16 @@ let tray: Tray;
 
 function rebuildMenu() {
     const template: MenuItemConstructorOptions[] = [
-        { label: '주기', submenu: [
-            periodMenuItem('10초', 10000),
-            periodMenuItem('1분', ONEMINUTE),
-            periodMenuItem('5분', ONEMINUTE * 5),
-            periodMenuItem('10분', ONEMINUTE * 10),
-            periodMenuItem('30분', ONEMINUTE * 30),
-            periodMenuItem('45분', ONEMINUTE * 45),
-            periodMenuItem('1시간', ONEMINUTE * 60),
+        { label: s.interval, submenu: [
+            periodMenuItem(s.sec10, 10000),
+            periodMenuItem(s.min1, ONEMINUTE),
+            periodMenuItem(s.min5, ONEMINUTE * 5),
+            periodMenuItem(s.min10, ONEMINUTE * 10),
+            periodMenuItem(s.min30, ONEMINUTE * 30),
+            periodMenuItem(s.min45, ONEMINUTE * 45),
+            periodMenuItem(s.hour1, ONEMINUTE * 60),
         ]},
-        { label: '이미지', submenu: [
+        { label: s.image, submenu: [
             ...getAllImages().map((img): MenuItemConstructorOptions => ({
                 label: img.label,
                 type: 'radio',
@@ -259,12 +276,12 @@ function rebuildMenu() {
                 click: () => { setImage(img.key); },
             })),
             { type: 'separator' },
-            { label: '이미지 관리...', click: () => { openPicker(); }},
+            { label: s.manageImages, click: () => { openPicker(); }},
         ]},
         { type: 'separator' },
-        { label: '지금 발사!', click: () => { popup(); }},
+        { label: s.fireNow, click: () => { popup(); }},
         { type: 'separator' },
-        { label: '종료', click: () => { app.quit(); }},
+        { label: s.quit, click: () => { app.quit(); }},
     ];
 
     tray.setContextMenu(Menu.buildFromTemplate(template));
