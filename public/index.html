@@ -7,87 +7,82 @@
         body {
             margin: 0;
             padding: 0;
-
-            background-color: '#00FFFFFF';
-
+            background-color: transparent;
             -webkit-app-region: drag;
-        }
-
-        img {
-            width: 100%;
-            height: 100%;
-
-            object-fit: contain;
-            user-select: none;
-
-            position: absolute;
-            top: 0;
-            left: 0;
         }
 
         .root {
             width: 100vw;
             height: 100vh;
-
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
-        
-        .container {
-          position: relative;
-          flex: 1;
-          width: 100%;
-          height: 100%;
+
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            max-width: 100%;
+            max-height: 100%;
         }
 
-        .cover {
-          width: 100%;
-          height: 100%;
-
-          position: absolute;
-          top: 0;
-          left: 0;
-
-          box-sizing: border-box;
-          padding-top: 25px;
-
-          display: flex;
-          justify-content: center;
-          align-items: center;
-
-          flex-direction: column;
+        img {
+            max-width: 100%;
+            max-height: calc(100vh - 32px);
+            object-fit: contain;
+            user-select: none;
+            display: block;
         }
 
-        @font-face {
-          font-family: 'ChosunGs';
-          src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ChosunGs.woff') format('woff');
-          font-weight: normal;
-          font-style: normal;
+        .btn-area {
+            height: 28px;
+            margin-top: 4px;
+            flex-shrink: 0;
         }
 
-        h1 {
-          color: white;
-
-          font-family: 'ChosunGs';
-
-          width: 30%;
-          text-align: center;
-          margin: 0;
-
-          font-size: 16px;
+        button {
+            -webkit-app-region: no-drag;
+            width: 100%;
+            height: 100%;
+            padding: 4px 0;
+            font-size: 12px;
+            border: none;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            cursor: pointer;
+            visibility: hidden;
+        }
+        button:hover {
+            background: rgba(0, 0, 0, 0.9);
         }
     </style>
   </head>
   <body>
     <div class="root">
-      <div class="container">
-        <img src="./warning.png" />
-        <div class="cover">
-          <h1>스쿼트!</h1>
-          <h1>스트레칭!</h1>
+      <div class="wrapper">
+        <img id="poster" />
+        <div class="btn-area">
+          <button id="ack">확인</button>
         </div>
-      </div> 
+      </div>
     </div>
+    <script>
+      const params = new URLSearchParams(window.location.search);
+      const image = params.get('image');
+      if (image) {
+        document.getElementById('poster').src = image;
+      }
+
+      document.getElementById('ack').addEventListener('click', () => {
+        window.popupAPI.acknowledge();
+      });
+
+      window.popupAPI.onShowAck(() => {
+        document.getElementById('ack').style.visibility = 'visible';
+      });
+    </script>
   </body>
 </html>
